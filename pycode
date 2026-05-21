@@ -1,0 +1,100 @@
+rooms = {}
+
+for floor in range(1, 6):
+    for i in range(1, 9):
+        room_number = floor * 100 + i
+
+        if i <= 2:
+            room_type = "VIP"
+            price = 8000
+        elif i <= 5:
+            room_type = "Medium"
+            price = 6500
+        else:
+            room_type = "Normal"
+            price = 5000
+
+        rooms[room_number] = {
+            "type": room_type,
+            "price": price,
+            "booked": False,
+            "customer": None
+        }
+
+def show_menu():
+    print("\n--- HOTEL INTERCONTINENTAL ---")
+    print("1. View All Rooms")
+    print("2. Book Room")
+    print("3. Checkout Room")
+    print("4. Exit")
+
+def view_rooms():
+    print("\nRoom Status:")
+    for room, info in rooms.items():
+        status = "Booked" if info["booked"] else "Available"
+        print(f"Room {room} | {info['type']} | {info['price']}৳ | {status}")
+
+def book_room():
+    room_no = int(input("Enter room number to book: "))
+
+    if room_no not in rooms:
+        print("Invalid room number!")
+        return
+
+    if rooms[room_no]["booked"]:
+        print("Room already booked!")
+        return
+
+    name = input("Enter customer name: ")
+    days = int(input("Enter number of days: "))
+
+    bill = days * rooms[room_no]["price"]
+
+    rooms[room_no]["booked"] = True
+    rooms[room_no]["customer"] = {
+        "name": name,
+        "days": days,
+        "bill": bill
+    }
+
+    print(f"Room {room_no} booked successfully!")
+    print(f"Total bill: {bill} taka")
+
+def checkout_room():
+    room_no = int(input("Enter room number to checkout: "))
+
+    if room_no not in rooms:
+        print("Invalid room number!")
+        return
+
+    if not rooms[room_no]["booked"]:
+        print("Room is not booked!")
+        return
+
+    customer = rooms[room_no]["customer"]
+
+    print("\n--- BILL ---")
+    print(f"Name: {customer['name']}")
+    print(f"Days: {customer['days']}")
+    print(f"Total Bill: {customer['bill']} taka")
+
+    rooms[room_no]["booked"] = False
+    rooms[room_no]["customer"] = None
+
+    print("Checkout successful!")
+
+while True:
+    show_menu()
+    choice = input("Enter choice: ")
+
+    if choice == "1":
+        view_rooms()
+    elif choice == "2":
+        book_room()
+    elif choice == "3":
+        checkout_room()
+    elif choice == "4":
+        print("Thank you!")
+        break
+    else:
+        print("Invalid choice!")
